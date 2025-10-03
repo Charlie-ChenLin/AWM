@@ -1,0 +1,9 @@
+torch
+matplotlib
+numpy
+scipy
+scikit-learn
+safetensors
+sentencepiece
+huggingface-hub
+tqdm 
