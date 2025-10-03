@@ -7,6 +7,7 @@ Our method leverages the Linear Assignment Problem (LAP) and an unbiased Centere
 
 ## Project Structure
 
+```
 ├── checkpoints/ # Default directory for storing model checkpoints
 ├── asset/ # Asset files (e.g., icons)
 ├── main.py         # Main script to run experiments
