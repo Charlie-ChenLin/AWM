@@ -19,18 +19,18 @@ AWM remains applicable in both scenarios.
 - When **new layers** are added to the model, Algorithm 1 first finds an optimal match between layers of the base model and the derived model by performing LAP on layer-wise similarities. We then compute UCKA on these matched layer pairs, from which AWM successfully recovers the similarity. Empirically, we collect 3 additional model pairs under this regime, and test AWM against them. We also conduct an experiment where  two randomly initialized layers are added to LLaMA-3.2-3B and the new model is continually pretrained with 6B tokens in SlimPajama dataset. We term this model as LLaMA-3.2-3B-two-layers, and use AWM to test its similarity to LLaMA-3.2-3B.  In all of the four cases, AWM successfully identifies the originality of models. We summarize the results in the following table.
 
 Method|Model Pair|Absolute Z-Score
--|-|-
+|-|-|-|
 Add layers|SOLAR-10.7B-v1.0 vs Mistral-7B-v0.1|323.5893
--|Yi-9B vs Yi-6B|329.5536
--|Llama2-7b vs LLaMA-Pro-8B|355.8036
--|LLaMA-3.2-8B-two-layers vs LLaMA-3.2-8B|355.1
+||Yi-9B vs Yi-6B|329.5536
+||Llama2-7b vs LLaMA-Pro-8B|355.8036
+||LLaMA-3.2-8B-two-layers vs LLaMA-3.2-8B|355.1
 
 - For **LoRA**, which introduces small low-rank updates to weights, we find empirically that AWM is robust to such perturbations. For example, AWM reports 99.81% similarity between the LoRA-fine-tuned Firefly-LLaMA2-13B and its base model LLaMA2-13B (Table 1), and detects the similarity between ChatGLM-6B and its LoRA-fine-tuned variant with a Z-score of 355.27 (Table 2). We additionally collect 5 pairs of models where Lora is applied , and perform AWM on these cases. The results suggest that AWM successfully flags model similarities. We summarize the results as follows: 
 
 Method|Model Pair|Absolute Z-Score
--|-|-
+|-|-|-|
 LoRA|Llama2-7b vs Llama-2-Medical-Merged-LoRA|354.9107
--|Llama-7b-hf vs chinese-llama-plus-lora-7b-merged|241.9821
--|Llama-13b vs chinese-llama-13b-merged|296.6964
--|Llama-13b vs ziya-llama-13b-medical-merged|354.0179
--|alpaca-lora-7b vs llama-7b-hf|352.8750
+||Llama-7b-hf vs chinese-llama-plus-lora-7b-merged|241.9821
+||Llama-13b vs chinese-llama-13b-merged|296.6964
+||Llama-13b vs ziya-llama-13b-medical-merged|354.0179
+||alpaca-lora-7b vs llama-7b-hf|352.8750
