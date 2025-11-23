@@ -10,7 +10,7 @@ We are grateful to the reviewer for this clarifying question. As discussed in Se
 
 We agree that explicitly evaluating the discussed manipulations is important for closing the gap in our argument. In addition to the analysis in Section 4, we now empirically test the four manipulation strategies considered in Section 4.5, including permutations, signature matrix multiplications, constant scaling, and orthogonal transformations, and report the AWM-detcetd similarity in what follows:
 
-|Attack/Model|Llama-2-7B|Qwen2-7B|Mistral-7B|Llama-3-8B|Gemma-7B|
+|Attack\Model|Llama-2-7B|Qwen2-7B|Mistral-7B|Llama-3-8B|Gemma-7B|
 |-|-|-|-|-|-|
 |Permutation|100%|100%|100%|100%|100%|
 |Signature|100%|100%|100%|100%|100%|

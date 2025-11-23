@@ -6,16 +6,16 @@ We thank the reviewer for the careful reading of our work and for highlighting i
 We appreciate the reviewer’s thoughtful comment regarding this issue. 
 - First, **retraining the embedding layer from scratch may degrade the model's performance significantly**, which may contradict with the purpose to reuse the model's performance. We conduct an experiment on Llama3-3B, where the embedding layer is re-initialized and trained for 6B tokens in the SlimPajama dataset with other layers freezed. We observe a significant drop in the model's performance on popular benchmarks, arguing the validity of such a manipulation approach. The performance comparison is presented in the following table:
 
-| Method/Benchmark | LAMBADA (OpenAI version) | ARC-E | LAMBADA (Standard version) | ARC-C | WinoGrande | PIQA | HellaSwag | SciQ  | RACE | Average |
+| Model\Benchmark | LAMBADA (OpenAI version) | ARC-E | LAMBADA (Standard version) | ARC-C | WinoGrande | PIQA | HellaSwag | SciQ  | RACE | Average |
 |-|-|-|-|-|-|-|-|-|-|-|
-|Re-initialized embedding, trained on 6B tokens with other layers freezed|3.4|29.9|2.8|20.2 |53.9｜55.6|26.2|47.5|23.7|29.2|
+|Re-initialized embedding, trained on 6B tokens with other layers freezed|3.4|29.9|2.8|20.2 |53.9|55.6|26.2|47.5|23.7|29.2|
 |LLaMA3-3B|70.1|74.5|63.7|42.2|69.0|76.8|55.4|95.5|39.4|65.2|
 
-- Second, **replacement of embeddings and the tokenizer can be detected by AWM**. We study a real-world case where the tokenizer may be replaced and retrained. Noticing the heated debate on the similarity between some certain MoE model and Qwen-2.5-14B, we apply AWM to this case. Even though the tokenizers of the two models differ substantially (roughly 78% of their vocabulary tokens are not shared), AWM reports a similarity of 69.95% , and a Z-score of 248.48, flagging the similarity . In other words, heavy replacement of tokenizers and embeddings does not remove the deeper structural alignment that AWM captures in the remaining layers in this case, and the method continues to flag this pair as highly similar. 
+- Second, **replacement of embeddings and the tokenizer can be detected by AWM**. We study a real-world case where the tokenizer may be replaced and retrained. Noticing the heated debate on the similarity between some certain MoE model and Qwen-2.5-14B, we apply AWM to this case. Even though the tokenizers of the two models differ substantially (roughly 78% of their vocabulary tokens are not shared), AWM reports a Z-score of 248.48, flagging the similarity. In other words, heavy replacement of tokenizers and embeddings does not remove the deeper structural alignment that AWM captures in the remaining layers in this case, and the method continues to flag this pair as highly similar. 
 
-- Finally, **AWM does not rely heavily on the overlap of vocabulary tokens and related word embeddings**. To test how much AWM depends on overlapping tokens, we run an ablation over the number of shared tokens and report the results in Appendix G.1. Within such cases, AWM assigns high Z-scores and detects similarity (average absolute Z-score over 100) in most cases even if the number of overlapping tokens is low (~100 tokens), indicating that it does not heavily rely on a large set of aligned word embeddings. We also present the results in the following: 
+- Finally, **AWM does not rely heavily on the overlap of vocabulary tokens and related word embeddings**. To test how much AWM depends on overlapping tokens, we run an ablation over the number of shared tokens and report the results in Appendix F.1. Within such cases, AWM assigns high Z-scores and detects similarity (average absolute Z-score over 100) in most cases even if the number of overlapping tokens is low (~100 tokens), indicating that it does not heavily rely on a large set of aligned word embeddings. We also present the results in the following: 
 
-|Method|10|100|500|1000|3000|5000|10000|
+|Modification\Overlapping Tokens|10|100|500|1000|3000|5000|10000|
 |-|-|-|-|-|-|-|-|
 |SFT|354.32|354.32|354.32|354.32|354.32|354.32|354.32|
 |Continual Pretrain|5.40|147.64|192.08|204.63|208.02|208.21|210.89|
