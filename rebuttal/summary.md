@@ -15,11 +15,15 @@ Thank you for overseeing the evaluation of our submission. To facilitate your as
 
 ## Main concerns and our response
 
-1. **Effective detection in other scenarios**. We show that the effectiveness of AWM extends to MoE models (c.f. response to Reviewer tHGT, W1&Q1), and that AWM remains effective in cases like LoRA finetuning and layer addition (c.f. response to Reviewer tHGT, Q2), as well as layer removal, depth/width changes, cross-layer sharing, and block reordering (c.f. Reviewer z54L, W3&Q3). We also demonstrate that AWM can flag cases where a model is fused from mixed sources (c.f. response to Reviewer z54L, W5&Q5), detect FFN similarities in both curated model pairs and a real‑world case (c.f. Reviewer fYwn, W2), and does not heavily rely on shared vocabulary tokens, successfully detecting replacements of embeddings and tokenizers in real‑world cases (c.f. response to Reviewer fYwn, W1).
-2. **Robustness against attacks**. We show with concrete examples that AWM remains robust under a variety of attacks, including signature matrices, permutations, constant scaling and orthogonal transformations (c.f. response to Reviewer Wyog, W2). 
-3. **More baselines and ablation studies**. We add PCS and Intrinsic Fingerprint in experiments, which are still largely outperformed by AWM. We also conduct ablations on the design of CKA in AWM, covering the selection of kernels and biasedness. (c.f. response to Reviewer z54L, W6&Q7) 
+1. **Effective detection in other scenarios**. We show that AWM’s effectiveness extends to MoE models (c.f. response to Reviewer tHGT, W1 & Q1) and remains effective in cases like LoRA finetuning (c.f. response to Reviewer tHGT, Q2). We also demonstrate that AWM can flag cases where a model is fused from mixed sources (c.f. response to Reviewer z54L, W5 & Q5), detect FFN similarities in both curated model pairs and a real‑world case (c.f. Reviewer fYwn, W2), and successfully detect replacements of embeddings and tokenizers in real‑world cases (c.f. response to Reviewer fYwn, W1).
 
-All four reviewers give positive evaluations of our submission, and two reviewers have promised to raise scores before November 27 based on our rebuttal. We sincerely appreciate your time and effort in evaluating our submission, and we are glad to provide any further clarification if needed.
+2. **Robustness against structural alterations**. We show that AWM remains robust under layer addition (c.f. response to Reviewer tHGT, Q2), layer removal, depth/width changes, cross‑layer sharing, and block reordering (c.f. Reviewer z54L, W3 & Q3).
+
+3. **Robustness against LLM weight manipulations**. We empirically validate AWM against a variety of manipulations discussed in the paper, including constant scaling, signature matrix multiplications, permutations, and orthogonal transforms (c.f. response to Reviewer Wyog, W2).
+
+4. **More baselines and ablation studies**. We add PCS and Intrinsic Fingerprint in experiments, which are still largely outperformed by AWM. We also conduct ablations on the design of CKA in AWM, covering the selection of kernels and biasedness (c.f. response to Reviewer z54L, W6 & Q7). We further show that the effectiveness of AWM does not heavily rely on the number of shared vocabulary tokens (c.f. response to Reviewer fYwn, W1).
+
+All four reviewers give positive evaluations of our submission, and **two reviewers have promised to raise scores before November 27** based on our rebuttal. We sincerely appreciate your time and effort in evaluating our submission, and we are glad to provide any further clarification if needed.
 
 <!-- - clarity in theoretical analysis (@Reviewer fYwn)
 - more Related Works (@Reviewer fYwn)
