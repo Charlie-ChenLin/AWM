@@ -25,9 +25,8 @@
   &nbsp;
   <img src="https://img.shields.io/badge/Method-Training--Free-2f855a?style=flat-square" alt="Training Free">
 </p>
-
-`AWM` is a fingerprinting method to determine whether one large language model (LLM) is derived from another base model.  
-The method combines Linear Assignment Problem (LAP) based dimension alignment with unbiased CKA on attention weights, and is robust to common post-training changes.
+This repository contains the official implementation for the paper "[AWM: Accurate Weight-Matrix Fingerprint for Large Language Models](https://arxiv.org/abs/2510.06738)"
+`AWM` is a fingerprinting method to determine whether one large language model (LLM) is derived from another base model. The method combines Linear Assignment Problem (LAP) based dimension alignment with unbiased CKA on attention weights, and is robust to common post-training changes.
 
 ## News
 - [2026.1] AWM is accepted at ICLR 2026!
