@@ -1,108 +1,152 @@
-# AWM <img src="asset/awm-icon.png" width="40" style="vertical-align: middle;">: Accurate Weight-Matrix Fingerprint for Large Language Models
+<p align="center">
+  <img src="./asset/awm-icon.png" alt="AWM logo" width="96">
+</p>
 
-This repository contains the official implementation for the paper "[AWM: Accurate Weight-Matrix Fingerprint for Large Language Models](https://arxiv.org/abs/2405.XXXXX)". AWM is a training-free fingerprinting method to determine if a Large Language Model (LLM) is derived from another base model.
+<!-- <h2 align="center">AWM: Accurate Weight-Matrix Fingerprint for Large Language Models</h2> -->
 
-Our method leverages the Linear Assignment Problem (LAP) and an unbiased Centered Kernel Alignment (CKA) to create a similarity metric that is highly robust to common post-training modifications and malicious manipulations, while exhibiting a near-zero risk of false positives.
+<h3 align="center">
+<b>AWM: Accurate Weight-Matrix Fingerprint for Large Language Models</b>
+<br>
+<b>ICLR 2026</b>
+</h3>
+
+<p align="center">
+  Training-free model fingerprint with LAP-aligned unbiased CKA
+</p>
+
+<p align="center">
+  <a href="https://arxiv.org/abs/2510.06738">
+    <img src="https://img.shields.io/badge/arXiv-2510.06738-b31b1b?style=flat-square&logo=arxiv" alt="arXiv"></a>
+  &nbsp;
+  <a href="https://github.com/LUMIA-Group/AWM">
+    <img src="https://img.shields.io/badge/GitHub-Project-181717?style=flat-square&logo=github" alt="GitHub"></a>
+  &nbsp;
+  <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+  &nbsp;
+  <img src="https://img.shields.io/badge/Method-Training--Free-2f855a?style=flat-square" alt="Training Free">
+</p>
+
+`AWM` is a fingerprinting method to determine whether one large language model (LLM) is derived from another base model.  
+The method combines Linear Assignment Problem (LAP) based dimension alignment with unbiased CKA on attention weights, and is robust to common post-training changes.
+
+## News
+- [2026.1] AWM is accepted at ICLR 2026!
+- [2025.10] Code and paper released. 
+
+## Quick Feature Summary
+
+| Feature Category | AWM Capability |
+| - | - |
+| **Goal** | Independency test of open-source LLMs based on their weights |
+| **Method** | 1️⃣ LAP-based alignment <br> 2️⃣ Unbiased CKA (UCKA) |
+|**Detectable Weights**| ✅ Attention weights <br>✅ (informal) FFN weights|
+| **Computation Cost** | ✅ Training-free <br> ✅ ~30s/pair on one RTX3090|
+| **Accuracy** | ✅~0 similarity scores for independent models <br> ✅High similarity scores for correlated models|
+| **Robustness to <br>training recipes** | ✅ Supervised fine-tuning (SFT) <br> ✅ Continual pre-training (CPT) <br> ✅ Reinforcement learning post-training (RL)<br> ✅ Multimodal tuning <br> ✅ Pruning <br> ✅ MoE upcycling |
+|**Robustness to <br>weight manipulations**| ✅ Constant scaling <br> ✅ Permutaion matrices<br> ✅ Signature matrices |
 
 
-## Project Structure
+## Table of Contents
 
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+  - [A. Compare Two Local Models](#a-compare-two-local-models)
+  - [B. Run a Predefined Experiment](#b-run-a-predefined-experiment)
+- [Model Download](#model-download)
+- [Experiment Suites](#experiment-suites)
+- [Repository Structure](#repository-structure)
+- [Citation](#citation)
+
+## Installation
+
+```bash
+git clone https://github.com/LUMIA-Group/AWM
+cd AWM
+pip install -r requirements.txt
 ```
-├── checkpoints/            # Default directory for storing model checkpoints
-├── asset/                  # Asset files (e.g., icons)
-├── main.py                 # Main script to run experiments
-├── similarity_metrics.py   # Core functions for CKA, weight loading, and LAP alignment
-├── configs.py              # Experiment configurations (model paths, comparison pairs)
-├── download_models.sh      # Script to download models from Hugging Face Hub
-└── requirements.txt        # Python dependencies
+
+## Quick Start
+
+### A. Compare Two Local Models
+
+Download or place two model checkpoints (e.g. Llama-2-7b and CodeLlama-7b-hf) locally, then run:
+
+```bash
+python main.py \
+  --model_paths ./checkpoints/Llama-2-7b ./checkpoints/CodeLlama-7b-hf \
+  --device auto
 ```
 
-## Setup
+`--device` supports `auto`, `cpu`, and `cuda`.
 
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/LUMIA-Group/AWM_Fingerprint.git
-    cd AWM_Fingerprint
-    ```
+### B. Run a Predefined Experiment
 
+```bash
+python main.py --config sft_pairs --device auto
+```
 
-2.  **Install Dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-
-## Quick Start: Comparing Two Models
-
-1.  **Download Models**: Use `huggingface-cli` to download the two models you want to compare into the `checkpoints` directory. For example, to compare Llama-2-7B and CodeLlama-7b:
-    ```bash
-    huggingface-cli download meta-llama/Llama-2-7b --local-dir ./checkpoints/Llama-2-7b
-    huggingface-cli download codellama/CodeLlama-7b-hf --local-dir ./checkpoints/CodeLlama-7b-hf
-    ```
-
-2.  **Run the Analysis**: Use the `main.py` script with the `--model_paths` argument pointing to the two model directories.
-    ```bash
-    python main.py --model_paths ./checkpoints/Llama-2-7b ./checkpoints/CodeLlama-7b-hf
-    ```
-    The script will output the similarity score to the console.
-
+This mode uses model groups and analysis pairs defined in `configs.py`.
 
 ## Model Download
 
-We provide a convenient script to download all necessary model checkpoints from the Hugging Face Hub.
+`AWM` provides two ways to prepare checkpoints.
 
--   The default download directory is `./checkpoints/`, which is configured inside the `download_models.sh` script. You can change this path as needed.
+1. Direct download with `huggingface-cli`:
+```bash
+huggingface-cli download meta-llama/Llama-2-7b --local-dir ./checkpoints/Llama-2-7b
+huggingface-cli download codellama/CodeLlama-7b-hf --local-dir ./checkpoints/CodeLlama-7b-hf
+```
 
--   First, make the script executable:
-    ```bash
-    chmod +x download_models.sh
-    ```
+2. Batch download with helper script:
+```bash
+chmod +x download_models.sh
+./download_models.sh             # list supported config keys
+./download_models.sh sft_pairs   # download models for one config
+./download_models.sh all         # download all mapped models
+```
 
--   To see available download configurations:
-    ```bash
-    ./download_models.sh
-    ```
+Note: keep `CHECKPOINT_BASE_DIR` in `configs.py` and `download_models.sh` consistent with your local storage path.
 
--   To download a **specific model**, you can use `huggingface-cli` directly. For example:
-    ```bash
-    huggingface-cli download meta-llama/Llama-2-7b --local-dir ./checkpoints/Llama-2-7b
-    ```
+## Experiment Suites
 
--   To download **all models** required to reproduce the paper's experiments (Note: this will require significant disk space):
-    ```bash
-    ./download_models.sh all
-    ```
+Predefined config keys:
 
--   To download all models for a **specific experiment configuration** (e.g., `sft_pairs`):
-    ```bash
-    ./download_models.sh sft_pairs
-    ```
+- `sft_pairs`
+- `cpt_pairs`
+- `rl_pairs`
+- `multimodal_pairs`
+- `pruning_pairs`
+- `all_moe_pairs`
+- `sft_13b_7b_pairs`
+- `independent_pairs`
+- `independent_pairs_13b`
 
-## Reproducing Paper Experiments
+Suggested reproducibility flow:
 
-You can easily reproduce the experiments from the paper using the predefined configurations in `configs.py`.
+1. Download models for one suite, e.g. `./download_models.sh cpt_pairs`.
+2. Run analysis, e.g. `python main.py --config cpt_pairs --device auto`.
+3. Compare summary scores in the console output (`Wq_weights`, `Wk_weights`, `Wq_Wk_weights`).
 
-1.  **Download Models**: Download the models required for the experiment you want to run. For example, to run the `sft_pairs` experiment, you can download the necessary models with:
-    ```bash
-    ./download_models.sh sft_pairs
-    ```
+## Repository Structure
 
-2.  **Run the Experiment**: Use the `--config` flag to specify the desired experiment.
-    ```bash
-    python main.py --config sft_pairs
-    ```
-
-    Available configurations include: `sft_pairs`, `cpt_pairs`, `rl_pairs`, `multimodal_pairs`, `pruning_pairs`, `all_moe_pairs` (for upcycling), `independent_pairs`, and more. See `configs.py` for the full list.
+```text
+AWM/
+├── checkpoints/            # model checkpoints
+├── asset/                  # static assets (logo/icons)
+├── main.py                 # experiment entry point
+├── similarity_metrics.py   # CKA, weight loading, LAP alignment
+├── configs.py              # experiment definitions + model mapping
+├── download_models.sh      # batch downloader for Hugging Face models
+└── requirements.txt        # dependencies
+```
 
 ## Citation
-
-If you find our work useful, please consider citing our paper:
-
+If you find `AWM` useful in your research or applications, we would appreciate it if you could cite our work:
 ```bibtex
 @article{zeng2025awm,
   title={{AWM: Accurate Weight-Matrix Fingerprint for Large Language Models}},
   author={Boyi Zeng and Lin Chen and Ziwei He and Xinbing Wang and Zhouhan Lin},
   year={2025},
-  journal={arXiv preprint arXiv:2510.06738},  
+  journal={arXiv preprint arXiv:2510.06738},
 }
 ```
