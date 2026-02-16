@@ -43,7 +43,7 @@ The method combines Linear Assignment Problem (LAP) based dimension alignment wi
 | **Computation Cost** | ✅ Training-free <br> ✅ ~30s/pair on one RTX3090|
 | **Accuracy** | ✅~0 similarity scores for independent models <br> ✅High similarity scores for correlated models|
 | **Robustness to <br>training recipes** | ✅ Supervised fine-tuning (SFT) <br> ✅ Continual pre-training (CPT) <br> ✅ Reinforcement learning post-training (RL)<br> ✅ Multimodal tuning <br> ✅ Pruning <br> ✅ MoE upcycling |
-|**Robustness to <br>weight manipulations**| ✅ Constant scaling <br> ✅ Permutaion matrices<br> ✅ Signature matrices |
+|**Robustness to <br>weight manipulations**| ✅ Constant scaling <br> ✅ Permutaion matrices<br> ✅ Signature matrices <br> ✅ Orthogonal matrices|
 
 
 ## Table of Contents
